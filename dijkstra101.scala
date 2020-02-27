@@ -1,69 +1,48 @@
-
 import scala.util._
-import scala.io._
-
+import scala.collection.mutable.Stack
 object dijkstra {
-
   def main(args: Array[String]): Unit = {
-
-    val V: Int = 5
-    val graph: Array[Array[Int]] = Array(
-      Array(0, 4, 0,8,0),
-      Array(4,0,3,0,0),
-      Array(0,3,0,4,0),
-      Array(8,0,4,0,7),
-      Array(0,0,0,7,0)
-    )
-
-    val t: ShortestPath = new ShortestPath()
-    t.dijkstra(graph, 0)
+    val graph: Array[Array[Int]] = Array(Array(0,1,4,0),
+    	Array(1,0,2,0),
+    	Array(4,2,0,2),
+    	Array(0,0,2,0))
+     val V = graph.size
+     var maxi = 100000
+    val obj = new diji(V,maxi)
+    obj.calc(graph, 0)
   }
-
 }
-
-class ShortestPath {
-	val V: Int = 5
-	var MAX_VALUE = 100000
-
-    def minDistance(dist: Array[Int], sptSet: Array[Boolean]): Int = {
-   		var min: Int = MAX_VALUE
-   		var min_index: Int = 0
-
-    	for (v <- 0 until V) 
-    		if (sptSet(v) == false && dist(v) <= min) {
+class diji(V: Int,MAX: Int) {	
+    def minDistance(dist: Array[Int], checkSet: Array[Boolean]): Int = {
+   		var min: Int = MAX
+   		var min_counter: Int = 0
+    	for (v <- 0 until V; if (checkSet(v) == false && dist(v) <= min)) 
+    		 {
       			min = dist(v)
-     			min_index = v
+     			min_counter = v
     		}
-
-    	min_index
+    	min_counter
   	}
-
  	 def printSolution(dist: Array[Int]): Unit = {
- 	   println("Vertex \t\t Distance from Source")
- 	   for (i <- 0 until V) println(i + " \t\t " + dist(i))
- 	 }
-
-  def dijkstra(graph: Array[Array[Int]], src: Int): Unit = {
-
+ 	   println("Vertex \t      Distance from Source")
+ 	   for (i <- 0 until V) println(i + " \t      " + dist(i))
+	 }
+  def calc(graph: Array[Array[Int]], src: Int): Unit = {
     val dist: Array[Int] = Array.ofDim[Int](V)
-    val sptSet: Array[Boolean] = Array.ofDim[Boolean](V) //false if not included in final result
-
+    val checkSet: Array[Boolean] = Array.ofDim[Boolean](V) //false if not included in final result
     for (i <- 0 until V) {
-      dist(i) = MAX_VALUE
-      sptSet(i) = false
+      dist(i) = MAX
+      checkSet(i) = false
+      //parent(i) = -1
     }
-
     dist(src) = 0
-
     for (count <- 0 until V - 1) {
-
-      val u: Int = minDistance(dist, sptSet)
-      sptSet(u) = true
-      
-      for (v <- 0 until V)
-           if (!sptSet(v) && graph(u)(v) != 0 && dist(u) != MAX_VALUE &&
-             dist(u) + graph(u)(v) < dist(v)) dist(v) = dist(u) + graph(u)(v)
-    }
+      val u: Int = minDistance(dist, checkSet)
+            checkSet(u) = true      
+      for (v <- 0 until V; if (!checkSet(v) && graph(u)(v) != 0 ))           
+	        if( dist(u) != MAX && dist(u) + graph(u)(v) < dist(v)) 
+    			   dist(v) = dist(u) + graph(u)(v)
+     }
     printSolution(dist) 	 	 	
   }
 
