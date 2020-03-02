@@ -15,7 +15,8 @@ object DFS101 extends App{
 	val size = x.size
 	val st = new Stack[Int]()	
 	for((a,b)<- x ) println(s"Vertex $a -> $b") 	
-  	var vList = Set[Int]()  	
+  	var vList = Set[Int]()
+  	  	
   	//DFS call
 	var ls = dfs(x,1,vList,st)		
 	def dfs(m: SortedMap[Int,Set[Int]], start: Int,visitlist: Set[Int],stin: Stack[Int]): Unit = {		

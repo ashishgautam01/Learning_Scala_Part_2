@@ -1,8 +1,9 @@
 import scala.util._
 import scala.io._
 import scala.collection.SortedMap
-object primerMST {
-   def main(args: Array[String]): Unit = {
+
+object primerMST extends App {   
+    def main(args: Array[String]): Unit = {
     val t: P_MST = new P_MST()
     val graph: Array[Array[Int]] = Array(Array(0,1,0,2,3),
                                          Array(1,0,2,0,0),
@@ -10,8 +11,9 @@ object primerMST {
                                          Array(2,0,3,0,0),
                                          Array(3,0,1,0,0))
     t.primMST(graph)
-  }
+  
 }
+
 class P_MST {
   val V: Int = 5
   val max_value = java.lang.Integer.MAX_VALUE

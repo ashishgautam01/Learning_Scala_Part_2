@@ -3,16 +3,17 @@ import scala.collection.mutable.Stack
 object dijkstra {
   def main(args: Array[String]): Unit = {
     val graph: Array[Array[Int]] = Array(Array(0,1,4,0),
-    	Array(1,0,2,0),
-    	Array(4,2,0,2),
-    	Array(0,0,2,0))
-     val V = graph.size
-     var maxi = 100000
-    val obj = new diji(V,maxi)
+    	                                   Array(1,0,2,0),
+                                         Array(4,2,0,2),
+                                         Array(0,0,2,0))
+    val V = graph.size
+    var MAX = 100000
+    val obj = new diji(V,MAX)
     obj.calc(graph, 0)
   }
 }
-class diji(V: Int,MAX: Int) {	
+class diji(V: Int,MAX: Int) {	    
+    
     def minDistance(dist: Array[Int], checkSet: Array[Boolean]): Int = {
    		var min: Int = MAX
    		var min_counter: Int = 0
