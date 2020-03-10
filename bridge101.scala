@@ -1,57 +1,51 @@
 
-object Bridge extends App {
+class Solution {
 
-	var graph: Array[Array[Int]] = Array(Array(0,1,1,1,0),
-										 Array(1,0,1,0,0),
-										 Array(1,1,0,0,0),
-										 Array(1,0,0,0,1),
-										 Array(0,0,0,1,0))
+  private var timestamp: Int = _
 
-	var obj = new bridge(graph,0)
-	obj.visiter() 
-}
+  def criticalConnections(n: Int,connections: List[List[Integer]]): List[List[Integer]] = {
+    
 
-class bridge(g: Array[Array[Int]],start: Int){
+    val graph: Map[Integer, List[Integer]] = new HashMap[Integer, List[Integer]]()
+    for (i <- 0 until n) graph.put(i, new ArrayList[Integer]())
+    for (edge <- connections) {
+      val v0: Int = edge.get(0)
+      val v1: Int = edge.get(1)
+      graph.get(v0).add(v1)
+      graph.get(v1).add(v0)
+    }
+    val parent: Array[Int] = Array.ofDim[Int](n)
+    val low: Array[Int] = Array.ofDim[Int](n)
+    val disc: Array[Int] = Array.ofDim[Int](n)
+    for (i <- 0 until n) parent(i) = i
+    val visited: Array[Boolean] = Array.ofDim[Boolean](n)
+    val res: List[List[Integer]] = new ArrayList[List[Integer]]()
+    this.timestamp = 0
+    DFS(0, graph, visited, parent, low, disc, res)
+    res
+  }
 
-	def visiter (){
-		var counter = 0
-		var visitlist = Array[Array[Int]]()
-		if(dfs_check(visitlist,0,0,counter) == true){
-			println("Provided graph is connected :")
-		}
+  private def DFS(i: Int,graph: Map[Integer, List[Integer]],visited: Array[Boolean],parent: Array[Int],low: Array[Int],disc: Array[Int],res: List[List[Integer]]): Unit = {
+    visited(i) = true
+    low(i) = timestamp
+    disc(i) = timestamp { timestamp += 1; timestamp - 1 }
+    for (j <- graph.get(i)) {
+      if (!visited(j)) {
+        parent(j) = i
+        DFS(j, graph, visited, parent, low, disc, res)
+        low(i) = Math.min(low(j), low(i))
+        if (disc(i) < low(j)) {
+          val sol: List[Integer] = new ArrayList[Integer]()
+          sol.add(i)
+          sol.add(j)
+          res.add(sol)
+        }
+      } else {
+        if (j != parent(i)) {
+          low(i) = Math.min(low(i), disc(j))
+        }
+      }
+    }
+  }
 
-		for(i<- 0 until g.size; j<- 0 until g.size){
-			println(i+"-"+j+" = "+ g(i)(j))
-			var res = remove_check(i,j)
-
-			if(res){
-				println("Bridge found :"+i+"-"+j)
-			}
-			else {
-				println("No Bridges Found in the graph : ")
-			}
-		}
-
-	}
-
-	def dfs_check(visitlist: Array[Array[Int]],a: Int,b: Int,counter:Int): Boolean = {
-		println("DFS running ::")
-		visitlist.fill(0)(0)
-
-		for(i<- 0 until g.size;j<- 0 until g.size){
-			if(g(i)(j) == 1 && (visitlist(i)(j) == 0)){
-				println("Visited : "+ i+" - "+ j)
-				
-				dfs_check(visitlist,i,j,counter+1)
-			}
-		}
-		if(counter == 5) true
-		else false
-	}
-
-	def remove_check(a: Int,b: Int): Boolean = {
-		println("remover")
-		//remove and call dfs_check
-		false
-	}
 }

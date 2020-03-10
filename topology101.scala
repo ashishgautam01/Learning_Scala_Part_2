@@ -1,61 +1,64 @@
-
-import scala.collection.SortedMap
-import scala.collection.mutable.Stack
-import scala.collection.mutable.Set
+import scala.io.StdIn.readInt
+import scala.collection.mutable.ArrayBuffer
+import  scala.io.StdIn.readLine
+import scala.collection.mutable._
 import scala.util.control.Breaks._
 
-object toplogy extends App {
+object topo extends App{
 
-  // var grph: SortedMap[Int,Set[Int]]  = SortedMap(0->Set(),1->Set(),2->Set(3),3->Set(1),4->Set(0,1),5->Set(0,2)) 
-  //var grph: SortedMap[Int,Set[Int]] = SortedMap(0->Set(1,2),1->Set(3),2->Set(3),3->Set(4))
-  var grph: SortedMap[Int,Set[Int]] = SortedMap(1->Set(0),2->Set(1),3->Set(1),5->Set(2,4),6->Set(3,4),7->Set(5,6))
-  var sizee = grph.size
-  var visitlist = Set[Int]()
-  var obj = new topo(sizee,visitlist)
-   obj.tsort(grph,0)  
+  println("Enter the number vertex :")
+  var v=readInt()
+  println("Enter no of edge :")
+  var e=readInt()
+  
+  var obj = new topology()
+  obj.calc(v,e)
+
+}  
+class topology extends Dfs{
+
+ def calc(v: Int,e: Int){  
+
+  var ar= new ArrayBuffer[ArrayBuffer[Int]] 
+  for(i<-0 to v-1){
+      ar += new ArrayBuffer[Int]
+  }
+  
+  for(i<-0 to e-1){
+    var token=readLine().split(" ").map(_.toInt)
+    var a=token(0);var b=token(1)
+    ar(a)+=b
+  }
+
+  var visit=new Array[Boolean](v)
+  
+  val dfs=new Dfs()
+  var st =new Stack[Int]()
+      for(i<-0 to v-1){
+      if(visit(i)==false){
+       println(st + "previous")
+        (dfs.traversal(i,ar,visit,st))
+        println(st)
+      }
+  }
+
+  while(!st.isEmpty){
+      println(st.pop())
+  }
+  println(ar) 
+ } 
 }
 
-class topo(size: Int,visitlist: Set[Int]){
-
-  def tsort(g: SortedMap[Int,Set[Int]],start: Int){
-    //What we need    
-    var newstart = start
-    var st = Stack[Int]()
-    st.push(start)
-    //first ever call for the function
-    loop(start,visitlist)
-
-    def loop(curr: Int,visitlist: Set[Int]){
-    // breakable{
-      g.keys.foreach(i=> {
-        println("\nCurrent elt : "+ i)
-        if(g(i).isEmpty){ // For empty list 
-          println("Empty List : " + i)
-          st.push(i)
-          visitlist += i
-        }
-        else{
-          println("Unempty List :" + g(i))
-          traverse(g(i))
-          st.push(i)
-          visitlist += i
-        }
-      })
-     
-    } 
-
-    def traverse(lst: Set[Int]) {
-      lst.foreach(x => {
-        if(!visitlist.contains(x)){
-          println("traversed: "+ x)
-          visitlist += x
-          st.push(x)
-        }
-      })
-    } 
-     
-  println("Sorted Result : ")
-  var res = st.reverse
-  println(res.distinct)
-  }  
+class Dfs{
+    def traversal(src:Int,value:ArrayBuffer[ArrayBuffer[Int]],visit:Array[Boolean],s:Stack[Int]):Stack[Int]={
+       
+            for(i<-value(src)){
+                if(visit(i)==false){
+                    traversal(i,value,visit,s)         
+            }   
+        } 
+        visit(src)=true 
+         s.push(src)
+           s
+    }
 }

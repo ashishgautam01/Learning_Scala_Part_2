@@ -3,11 +3,11 @@ object cycle extends App{
   println("Number of Vertices : ")
   var num_ver = scala.io.StdIn.readInt()
   var grph = Array.ofDim[Int](num_ver,num_ver)
-  var o = new util() 
+  var o = new mat() 
   var res = o.getEdges(grph,num_ver)
   o.printgrp(res,num_ver)  
 }
-class util{
+class mat{
   def getEdges(g: Array[Array[Int]],v: Int): Array[Array[Int]] = {    
     for(i<- 0 until v; j<- 0 until v){
       g(i)(j) = 0
@@ -29,7 +29,7 @@ class util{
     for(i<- 0 until v){
       println(" ")
        for( j<- 0 until v){
-          print(g(i)(j) )
+          print(g(i)(j)+" " )
       }
     }
     println(" \n")
