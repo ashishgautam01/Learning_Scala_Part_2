@@ -1,82 +1,137 @@
-object Graph extends App {
+object euler {
 
-    val g1: Graph = new Graph(4)
-    g1.addEdge(0, 1)
-    g1.addEdge(0, 2)
-    g1.addEdge(1, 2)
-    g1.addEdge(2, 3)
-    g1.printEulerTour()
+  def main(args: Array[String]){
+    
+    var matt_obj = new mat()
+    var graph = matt_obj.getEdges()
+    //var graph: Array[Array[Int]] = Array(Array(0,1,1,0,0,0,0,0),Array(1,0,1,1,1,0,0,0),Array(1,1,0,1,0,1,0,0),Array(0,1,1,0,0,0,0,0),Array(0,1,0,0,0,1,1,1),Array(0,0,1,0,1,0,1,1),Array(0,0,0,0,1,1,0,0),Array(0,0,0,0,1,1,0,0))
+    
+    var o = new eull(graph)
+    o.init()
    
-
+  }  
 }
 
-class Graph (numOfVertices: Int) {
+class mat {
 
-  var vertices: Int = numOfVertices
+  def getEdges(): Array[Array[Int]] = { 
 
-  var adj = Array[Array[Int]]()
-
-  initGraph()
-
-  def initGraph(): Unit = {
-    adj = Array[Array[Int]]()
-    for (i <- 0 until vertices) {
-      adj(i) = Array[Int]()
+    println("Number of Vertices : ")
+    var v = scala.io.StdIn.readInt()
+    var g = Array.ofDim[Int](v,v)
+    for(i<- 0 until v; j<- 0 until v){
+      g(i)(j) = 0
     }
-  }
-
-  def addEdge(u: Int, v: Int): Unit = {
-    adj(u)(v) = 0
-    adj(v)(u) = 0
-  }
-  def removeEdge(u: Int, v: Int): Unit = {
-    adj(u)(v) = 0
-    adj(v)(u) = 0
-  }
-  def printEulerTour(): Unit = {
-    var u: Int = 0
-    for (i <- 0 until vertices if adj(i).size % 2 == 1) {
-      u = i
+    println("Enter number of Edges : ")
+    var e = scala.io.StdIn.readInt()
+    for(i<- 0 until e){  
+      println("From Node : ")
+      var temp1 = scala.io.StdIn.readInt()       
+      println("To Node   : ")
+      var temp2 = scala.io.StdIn.readInt()
+      g(temp2)(temp1) = 1
+      g(temp1)(temp2) = 1
     }
-    printEulerUtil(u)
-    println()
+    return g    
   }
-
-  def printEulerUtil(u: Int): Unit = {
-    for (i <- 0 until adj(u).size) {
-      val v: Int = adj(u)(i)
-      if (isValidNextEdge(u, v)) {
-        print(u + "-" + v + " ")
-        removeEdge(u, v)
-        printEulerUtil(v)
+  def printgrp(g: Array[Array[Int]],v: Int){
+    for(i<- 0 until v){
+      println(" ")
+       for( j<- 0 until v){
+          print(g(i)(j)+" " )
       }
     }
+    println(" \n")
+  }
+}
+
+
+class eull(graph: Array[Array[Int]]) {  
+    
+    val Node = graph.size
+    var t_grph = graph
+
+  def init(){
+     println("Euler Path or circuit :")
+    fleury_Check(findstartVert())
   }
 
-  def isValidNextEdge(u: Int,v: Int): Boolean = {
-
-    if (adj(u).size == 1) {
-      true
+  def findstartVert(): Int ={
+    for(i<- 0 until Node){
+      var deg = 0
+      for(j<- 0 until Node){
+        if(t_grph(i)(j)== 1){
+          deg +=1
+        }
+      }  
+      if(deg % 2 != 0){
+       return i
+      }      
     }
-    var isVisited: Array[Boolean] = Array.ofDim[Boolean](this.vertices)
-    val count1: Int = dfsCount(u, isVisited)
-    removeEdge(u, v)
-    isVisited = Array.ofDim[Boolean](this.vertices)
-    val count2: Int = dfsCount(u, isVisited)
-
-    addEdge(u, v)
-    if ((count1 > count2)) false 
-    else true
+    return 0
   }
 
-  def dfsCount(v: Int, isVisited: Array[Boolean]): Int = {
-
-    isVisited(v) = true
-    var count: Int = 1
-    for (adj <- adj(v) if !isVisited(adj)) {
-      count = count + dfsCount(adj, isVisited)
+  def dfs(prev: Int,start: Int,visited: Array[Boolean]):Int = {
+    var count =1
+    visited(start) = true
+    for(u<- 0 until Node){
+      if(prev != u){
+        if(!visited(u)){
+          if(t_grph(start)(u) == 1){
+            count += dfs(start,u,visited)
+          }
+        }
+      }
     }
-    count
+    return count
+  }
+
+  def isBridge(u: Int,v: Int): Boolean ={
+    var deg = 0
+    for(i<- 0 until Node){
+      if(t_grph(v)(i) == 1){
+        deg += 1
+      }
+      if(deg > 1) 
+        return false
+    }
+    return true
+  }
+
+  def edgeCount(): Int ={
+    var count = 0
+    for(i<- 0 until Node){
+      for(j<- i until Node){
+        if(t_grph(i)(j) == 1){
+          count += 2  
+        }
+      }
+    }
+    return count
+  }
+
+  def fleury_Check(start: Int){
+    var edge = edgeCount()
+    var v_count = Node
+    for(v<- 0 until Node){
+      if(t_grph(start)(v) == 1){
+        var visited = (0 until Node map(_ => false)).toArray
+        if(isBridge(start,v)){
+          v_count -= 1
+        }
+        var cnt = dfs(start,v,visited)
+        if((v_count - cnt).abs <= 2){
+          println(start+"--"+v+" ")
+          if(isBridge(v,start)){
+            v_count -= 1
+          }
+          t_grph(start)(v) = 0
+          t_grph(v)(start) = 0
+          edge -= 2
+          fleury_Check(v)
+        }
+      }
+    }
   }
 
 }

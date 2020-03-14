@@ -15,8 +15,8 @@ object Main extends App{
     printMatrix(M)
     println("Shortest Path Matrix.")
     printMatrix(obj.FloydAlgo(M))
-    println("Path Matrix")
-    printMatrix(P)
+    //println("Path Matrix")
+    //printMatrix(P)
 
   def printMatrix(Matrix: Array[Array[Int]]): Unit = {
     print("\n\t")
@@ -42,12 +42,13 @@ object Main extends App{
 
 class floyd(P: Array[Array[Int]],N: Int) {
   
-  def FloydAlgo(M: Array[Array[Int]]): Array[Array[Int]] = {
-    for (k <- 0 until N; i <- 0 until N; j <- 0 until N if M(i)(k) + M(k)(j) < M(i)(j)) {
-      M(i)(j) = M(i)(k) + M(k)(j)
+  def FloydAlgo(g: Array[Array[Int]]): Array[Array[Int]] = {
+    for (k <- 0 until N; i <- 0 until N; j <- 0 until N )
+      if (g(i)(k) + g(k)(j) < g(i)(j)) {
+      g(i)(j) = g(i)(k) + g(k)(j)
       P(i)(j) = k
     }
-    M
+    g
   }
 
   def min(i: Int, j: Int): Int = {

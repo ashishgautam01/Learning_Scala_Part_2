@@ -17,7 +17,6 @@ object primerMST extends App {
                                       Array(0,0,0,6,10,0,11),
                                       Array(0,0,0,0,9,11,0))
 
-
     val t: P_MST = new P_MST(graph)
     t.primMST()
   

@@ -31,7 +31,7 @@ object strong extends App{
 		var x = stack.pop()
 		var result = obj.dfs(x,transposed,visitlist1,st1)
 		
-		println(x + "  -->  " + result )
+		println(x + "  -->  " + result.reverse )
 		
 	}	
 }

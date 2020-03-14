@@ -3,44 +3,38 @@ import scala.collection.mutable.Stack
 
 object tarjan extends App{
 
-    val NUM_NODES: Int = 10
-    val adjMatrix: Array[Array[Boolean]] = Array.ofDim[Boolean](NUM_NODES, NUM_NODES)
-    adjMatrix(0)(1) = true
-    adjMatrix(1)(2) = true
-    adjMatrix(2)(0) = true
-    adjMatrix(5)(4) = true
-    adjMatrix(5)(6) = true
-    adjMatrix(3)(5) = true
-    adjMatrix(4)(3) = true
-    adjMatrix(4)(5) = true
-    adjMatrix(6)(4) = true
-    adjMatrix(7)(8) = true
-    adjMatrix(8)(7) = true
-    adjMatrix(1)(5) = true
-    adjMatrix(1)(7) = true
-    adjMatrix(2)(7) = true
-    adjMatrix(6)(8) = true
-    adjMatrix(9)(8) = true
-    adjMatrix(9)(4) = true
-
-    val obj: Tarjan = new Tarjan(adjMatrix)
+    println("Enter Number of Vertices :")
+    val NUM_NODES: Int = scala.io.StdIn.readInt
+    val arr: Array[Array[Boolean]] = Array.ofDim[Boolean](NUM_NODES, NUM_NODES)
+    println("Enter Number of Edges :")
+    var e = scala.io.StdIn.readInt
+    for(i<- 0 until e){
+      
+      print("# " )
+       var x = scala.io.StdIn.readInt 
+       print( " -> " )
+        var y = scala.io.StdIn.readInt
+      arr(x)(y) = true
+    }
+    val obj: Tarjan = new Tarjan(arr)
     println("SSC count: " + obj.countStronglyConnectedComponents())
     println("Strong connected components:\n" + Arrays.toString(obj.getStronglyConnectedComponents))
   }
 
-  class Tarjan(private var adj: Array[Array[Boolean]]) {
+  class Tarjan(adj: Array[Array[Boolean]]) {
 
     var n: Int = adj.length
-    var pre: Int = _
+    var pre: Int = 0
     var count: Int = 0
     var id = new Array[Int](n)
     var low = new Array[Int](n)
     var marked = new Array[Boolean](n)
     var stack = Stack[Int]()
 
-    for (u <- 0 until n if !marked(u)) dfs(u)
+    for (u <- 0 until n if !marked(u)) 
+      dfs(u)
 
-    private def dfs(u: Int): Unit = {
+    def dfs(u: Int): Unit = {
       marked(u) = true
       low(u) = { pre += 1; pre - 1 }
       var min: Int = low(u)

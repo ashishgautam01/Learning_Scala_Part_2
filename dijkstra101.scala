@@ -40,7 +40,6 @@ class diji(V: Int,MAX: Int) {
     for (i <- 0 until V) {
       dist(i) = MAX
       visitlist(i) = false
-      //parent(i) = -1
     }
     dist(src) = 0
     for (count <- 0 until V - 1) {

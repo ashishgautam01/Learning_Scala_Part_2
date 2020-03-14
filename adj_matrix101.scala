@@ -1,14 +1,16 @@
 import scala.collection.mutable.Stack
 object cycle extends App{
-  println("Number of Vertices : ")
-  var num_ver = scala.io.StdIn.readInt()
-  var grph = Array.ofDim[Int](num_ver,num_ver)
+  
   var o = new mat() 
-  var res = o.getEdges(grph,num_ver)
-  o.printgrp(res,num_ver)  
+  var res = o.getEdges()
+  o.printgrp(res,res.size)  
 }
 class mat{
-  def getEdges(g: Array[Array[Int]],v: Int): Array[Array[Int]] = {    
+  def getEdges(): Array[Array[Int]] = { 
+
+    println("Number of Vertices : ")
+    var v = scala.io.StdIn.readInt()
+    var g = Array.ofDim[Int](v,v)
     for(i<- 0 until v; j<- 0 until v){
       g(i)(j) = 0
     }
